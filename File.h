@@ -15,6 +15,7 @@ private:
 #define SUCCEED  0
 #define ERROR   -1
 
+
 class CountTrie
 {
 public:

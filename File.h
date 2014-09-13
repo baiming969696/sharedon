@@ -12,6 +12,7 @@ private:
   OwnerCollection<Owner>  ownerCol;
 };
 
+
 #define SUCCEED  0
 #define ERROR   -1
 

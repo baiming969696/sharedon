@@ -1,5 +1,6 @@
-
+  
 template <typename Owner>
+
 class FileOwnerCollection {
   FileOnwerCollection(string& filename);
   ~FileOnwerCollection();
@@ -11,6 +12,7 @@ private:
   int                     ownerNum;
   OwnerCollection<Owner>  ownerCol;
 };
+
 
 
 #define SUCCEED  0

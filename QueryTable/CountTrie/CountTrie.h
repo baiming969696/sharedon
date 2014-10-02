@@ -1,19 +1,21 @@
-#include <stack>
 #include <list>
-#include <iostream>
+#include <vector>
 #include <utility>
 #include <string>
 #include <algorithm>
 #include <functional>
-#include <cassert>
-#include <vector>
+
 #include <cstdlib>
 #include <ctime>
 
+#include <iostream>
+
+#include "CountTrieNode.h"
 
 namespace sharedon
 {
-      
+
+/*    
 class CountTrieNode
 {
   friend class CountTrie;
@@ -213,7 +215,7 @@ int CountTrieNode::getLeaves
     return prev->getLeaves(s, tmp, level, pCnt, result);
   }
 }
-
+*/
 
 class CountTrie
 {
@@ -221,22 +223,20 @@ class CountTrie
   typedef std::list<Record>::iterator      RecordIter;
 
 public:
-  CountTrie();
-  ~CountTrie();
+  CountTrie() :  _root(new CountTrieNode) {}
+  ~CountTrie() { delete _root; }
   
-  bool findEntry         (const std::string& s);
-  int  findClosestEntries(const std::string& s, int num, std::vector<std::string>& result);
-  int  insertEntry       (const std::string& s);
-  int  deleteEntry       (const std::string& s);
-  int  countEntry        ();
+  bool findEntry  (const std::string& s);
+  int  insertEntry(const std::string& s);
+  int  deleteEntry(const std::string& s);
+  
+  int  getCount() { return _root->leafCount(); }
+
+ // int  findClosestEntries(const std::string& s, int num, 
+ //     std::vector<std::string>& result);
   
 private:
-  void destory();
-  
-private:
-  std::string    id;
-  CountTrieNode *root;
- 
+  CountTrieNode *_root;
 };
 
 bool CountTrie::findEntry(const std::string& s)
@@ -246,11 +246,13 @@ bool CountTrie::findEntry(const std::string& s)
     return false;
   }
   
-  CountTrieNode *prev = root;
+  CountTrieNode *prev = _root;
   CountTrieNode *cur  = NULL;  
   
   for (int i = 0; i < sz; i++) {
-    cur = prev->getNext(s[i]);
+//    std::cout<<"here1"<<std::endl;
+    cur = prev->getNode(s[i]);
+//    std::cout<<"here2"<<std::endl;
     if (cur == NULL) {
       return false;
     } else {
@@ -267,30 +269,30 @@ bool CountTrie::findEntry(const std::string& s)
 
 int CountTrie::insertEntry(const std::string& s)
 {
-  if (findEntry(s)) {
+  if (findEntry(s) == true) {
     return -1;
   }
   
-  CountTrieNode *prev = root;
+  CountTrieNode *prev = _root;
   CountTrieNode *cur  = NULL;
   int sz = s.size();
   int insertPos = 0;
   
   for (int i = 0; i < sz; i++) {
-    cur = prev->getNext(s[i]);
+    cur = prev->getNode(s[i]);
     if (cur == NULL) {
       insertPos = i;
       break;
     } else {
-      prev->addCount();
+      prev->increCount();
       prev = cur;
     }
   }
   
   for (int i = insertPos; i < sz; i++) {
+    prev->increCount();
     prev->addRecord(s[i]);
-    prev->setLeaf(false);
-    prev->addCount();
+    prev = prev->getNode(s[i]);
   }
   
   return 0;
@@ -303,21 +305,18 @@ int CountTrie::deleteEntry(const std::string& s)
   }
   
   int sz = s.size();
-  CountTrieNode *prev = root;
+  CountTrieNode *prev = _root;
   CountTrieNode *cur  = NULL;
   
   for (int i = 0; i < sz; i++) {
-    cur = prev->getNext(s[i]);
-    prev->minusCount();
-    if (prev->getCount() == 0) {
-      delete prev;
-    }
-    if (cur->getCount() == 1) {
+    prev->decreCount();
+    cur = prev->getNode(s[i]);
+    if (cur->leafCount() == 0 || cur->leafCount() == 1) {
       prev->deleteRecord(s[i]);
+      break;
     }
+    prev = cur;
   }
-  
-  delete cur;
   
   return 0;
 }

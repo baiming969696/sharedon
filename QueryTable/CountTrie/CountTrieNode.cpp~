@@ -1,0 +1,55 @@
+#include <list>
+#include <utility>
+#include <algorithm>
+#include <functional>
+
+using namespace std;
+
+bool test(int a, int b)
+{
+
+}
+
+bool foo(int& a)
+{
+
+}
+int a = 3;
+int& b = a;
+bool c = foo(b);
+bool d = foo(a);
+
+pointer_to_binary_function<int, int, bool> x = ptr_fun(test);
+binder2nd<pointer_to_binary_function<int, int, bool> > y = bind2nd(x, 2);
+
+/*
+class CountTrieNode
+{
+
+};
+
+typedef pair<char, CountTrieNode* >      Record;
+typedef Record&                          RecordRef;
+typedef std::list<Record>::iterator      RecordIter;
+
+list<Record> lr;
+bool isRecordEqualTo(RecordRef rec, char b) 
+{ 
+  return rec.first == b; 
+}
+
+bool isRecordEqualTo_c(RecordRef rec) 
+{ 
+  return rec.first == 'c'; 
+}
+
+// ok
+pointer_to_binary_function<RecordRef, char, bool> x = ptr_fun(isRecordEqualTo);
+
+// ok
+RecordIter it = find_if(lr.begin(), lr.end(), ptr_fun(isRecordEqualTo_c));
+
+// bug emerge
+RecordIter it = find_if(lr.begin(), lr.end(), bind2nd(ptr_fun(isRecordEqualTo), 'c'));
+
+*/

@@ -1,0 +1,11 @@
+#include "CountTrie.h"
+#include <string>
+
+using namespace sharedon;
+
+int main()
+{
+  CountTrie ct;
+  ct.findEntry("");
+}
+

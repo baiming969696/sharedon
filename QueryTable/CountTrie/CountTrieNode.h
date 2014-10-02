@@ -1,0 +1,88 @@
+#include <list>
+#include <utility>
+#include <algorithm>
+#include <functional>
+#include <iostream>
+using namespace std;
+
+namespace sharedon
+{
+    
+class CountTrieNode
+{
+  typedef std::pair<char, CountTrieNode* > Record;
+  typedef std::list<Record>::iterator      RecordIter;
+  
+public:
+  CountTrieNode() : _leafCount(0) { }
+  ~CountTrieNode();
+  
+  int            addRecord   (char c);
+  int            deleteRecord(char c);
+  CountTrieNode* getNode     (char c);
+  
+  bool isLeaf    () { return _leafCount == 0; }
+  int  leafCount () { return _leafCount;}
+  void increCount() { _leafCount++; return; }
+  void decreCount() { _leafCount--; return; }
+  int  branchNum () { return _recordList.size(); }
+  //int  getLeaves
+  //  (const std::string& s, std::string& tmp, int level, int num, std::vector<std::string>& result);
+
+static bool isRecordEqualTo(Record rec, char b) { return rec.first == b; }
+
+private:
+  int               _leafCount;
+  std::list<Record> _recordList;       
+};
+
+
+int CountTrieNode::addRecord(char c)
+{
+  RecordIter it = std::find_if(_recordList.begin(), _recordList.end(), 
+      std::bind2nd(std::ptr_fun<Record, char, bool>(isRecordEqualTo), c));
+  if (it == _recordList.end()) {
+    CountTrieNode *newNode = new CountTrieNode;
+    Record newRecord = std::make_pair(c, newNode);
+    _recordList.push_back(newRecord);
+    return 0;
+  } else {
+    return -1;
+  }
+}
+
+int CountTrieNode::deleteRecord(char c)
+{
+  RecordIter it = std::find_if(_recordList.begin(), _recordList.end(), 
+      std::bind2nd(std::ptr_fun<Record, char, bool>(isRecordEqualTo), c));
+  if (it == _recordList.end()) {
+    return -1;
+  } else {
+    delete it->second;
+    _recordList.erase(it);
+    return 0;  
+  }
+}
+
+CountTrieNode* CountTrieNode::getNode(char c)
+{
+//  std::cout<<"here3"<<std::endl;
+  RecordIter it = std::find_if(_recordList.begin(), _recordList.end(), 
+      std::bind2nd(std::ptr_fun<Record, char, bool>(isRecordEqualTo), c));
+//  std::cout<<"here4"<<std::endl;
+  if (it == _recordList.end()) {
+    return NULL;
+  } else {
+    return it->second;
+  }
+}
+
+CountTrieNode::~CountTrieNode()
+{
+  for (RecordIter it = _recordList.begin(); it != _recordList.end(); it++) {
+    delete it->second;
+  }
+}
+
+} //namspace sharedon end
+

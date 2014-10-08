@@ -63,6 +63,21 @@ BOOST_AUTO_TEST_CASE(test2)
   BOOST_CHECK(ct.findEntry("abc") == false);
 }
 
+BOOST_AUTO_TEST_CASE(test3)
+{
+  CountTrie ct;
+  std::string s("aaa");
+  for (int i = 0; i < 2; i++) {
+    for (int j = 0; j < 2; j++) {
+      for (int k = 0; k < 2; k++) {
+        s[0] = 'a'+i;
+        s[1] = 'a'+j;
+        s[2] = 'a'+k;
+      }
+    }
+  }
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 

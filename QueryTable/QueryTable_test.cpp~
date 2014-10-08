@@ -12,12 +12,12 @@ BOOST_AUTO_TEST_CASE(test1)
   QueryTable qt;
   BOOST_CHECK(qt.isAddrHasFile("1.txt", "ABCD") == false);
   BOOST_CHECK(qt.deleteFromFile("1.txt", "ABCD") == -1);
-  BOOST_CHECK(qt.AddToFile("1.txt", "ABCD") == 0);
-  BOOST_CHECK(qt.AddToFile("1.txt", "ABCD") == -1);
+  BOOST_CHECK(qt.addToFile("1.txt", "ABCD") == 0);
+  BOOST_CHECK(qt.addToFile("1.txt", "ABCD") == 1);
   BOOST_CHECK(qt.isAddrHasFile("1.txt", "ABCD") == true);
-  BOOST_CHECK(qt.AddToFile("1.txt", "AAAA") == 0);
+  BOOST_CHECK(qt.addToFile("1.txt", "AAAA") == 0);
   BOOST_CHECK(qt.isAddrHasFile("1.txt", "AAAA") == true);
-  BOOST_CHECK(qt.AddToFile("2.txt", "ABCD") == 0);
+  BOOST_CHECK(qt.addToFile("2.txt", "ABCD") == 0);
   BOOST_CHECK(qt.isAddrHasFile("2.txt", "ABCD") == true);
   BOOST_CHECK(qt.deleteFromFile("1.txt", "AAAA") == 0);
   BOOST_CHECK(qt.isAddrHasFile("1.txt", "AAAA") == false);
